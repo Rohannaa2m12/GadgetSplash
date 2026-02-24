@@ -508,3 +508,88 @@
 
       document.querySelectorAll(".tab").forEach(tab => {
         tab.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+          document.querySelectorAll(".panel").forEach(p => p.classList.remove("visible"));
+          tab.classList.add("active");
+          const id = "panel-" + tab.dataset.tab;
+          const panel = document.getElementById(id);
+          if (panel) panel.classList.add("visible");
+        });
+      });
+
+      btnSetContract.addEventListener("click", () => {
+        const addr = (contractInput.value || "").trim();
+        if (!addr || !addr.startsWith("0x")) {
+          showMsg(registerMsg, "Enter a valid HackApp contract address (0x…).", "err");
+          return;
+        }
+        contractAddress = addr;
+        contract = new ethers.Contract(addr, ABI, signer || provider);
+        showMsg(registerMsg, "Contract set. Connect wallet to interact.", "ok");
+        pushActivity("Contract set: " + addr.slice(0, 10) + "…", "info");
+        refreshStats();
+      });
+
+      async function connect() {
+        if (typeof window.ethereum === "undefined") {
+          showMsg(registerMsg, "Install MetaMask or another Web3 wallet.", "err");
+          return;
+        }
+        try {
+          provider = new ethers.BrowserProvider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          if (!accounts.length) return;
+          signer = await provider.getSigner();
+          const addr = await signer.getAddress();
+          walletEl.textContent = addr.slice(0, 6) + "…" + addr.slice(-4);
+          btnConnect.textContent = "Connected";
+          btnConnect.disabled = true;
+          if (contractAddress) {
+            contract = new ethers.Contract(contractAddress, ABI, signer);
+            refreshStats();
+            refreshMyStats();
+          }
+          pushActivity("Wallet connected: " + addr.slice(0, 10) + "…", "ok");
+        } catch (e) {
+          showMsg(registerMsg, e.message || "Connection failed.", "err");
+        }
+      }
+
+      btnConnect.addEventListener("click", connect);
+
+      function keccak256Payload(payload) {
+        const str = payload.trim() || "0";
+        const hex = ethers.toUtf8Bytes(str);
+        return ethers.keccak256(hex);
+      }
+
+      async function refreshStats() {
+        if (!contract || !provider) return;
+        try {
+          const [nonce, totalShortcuts, totalFees, paused] = await Promise.all([
+            contract.gadgetNonce(),
+            contract.totalShortcutsClaimed(),
+            contract.totalFeesWei(),
+            contract.haxPaused()
+          ]);
+          statGadgets.textContent = nonce.toString();
+          statShortcuts.textContent = totalShortcuts.toString();
+          statFees.textContent = ethers.formatEther(totalFees) + " ETH";
+          if (paused) statMyScore.textContent = "Paused";
+        } catch (_) {
+          statGadgets.textContent = "—";
+          statShortcuts.textContent = "—";
+          statFees.textContent = "—";
+        }
+      }
+
+      async function refreshMyStats() {
+        if (!contract || !signer) return;
+        try {
+          const addr = await signer.getAddress();
+          const [score, shortcuts, count] = await Promise.all([
+            contract.efficiencyScore(addr),
+            contract.shortcutCountByUser(addr),
+            contract.gadgetCountByOwner(addr)
+          ]);
+          statMyScore.textContent = score.toString();
