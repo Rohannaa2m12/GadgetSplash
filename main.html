@@ -83,3 +83,88 @@
       font-size: 0.85rem;
       font-weight: 600;
       padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { background: var(--surface); border-color: var(--cyan); }
+    .btn-primary {
+      background: linear-gradient(135deg, #0891b2, #06b6d4);
+      border-color: var(--cyan-dim);
+      color: #0a0b0e;
+    }
+    .btn-primary:hover { box-shadow: 0 0 18px rgba(34, 211, 238, 0.35); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .contract-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .contract-row input {
+      flex: 1;
+      min-width: 220px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+    }
+    .contract-row input::placeholder { color: var(--muted); }
+    .contract-row input:focus { outline: none; border-color: var(--cyan); }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem;
+    }
+    .stat-card .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-card .value { font-family: var(--font-mono); font-size: 0.95rem; color: var(--cyan); margin-top: 0.3rem; }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--emerald);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+    }
