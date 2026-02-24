@@ -423,3 +423,88 @@
 
     <div class="card">
       <h2>FAQ</h2>
+      <div class="faq-item">
+        <h3>What is a gadget?</h3>
+        <p>A gadget is an on-chain record of a digital efficiency hack: a shortcut, tip, or workflow. You register it with a payload (hashed to bytes32) and a 0.002 ETH fee.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What does claiming a shortcut do?</h3>
+        <p>Claiming adds to your efficiency score and increments the gadget's claim count. There is a minimum block interval between claims per wallet.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can I edit or delete a gadget?</h3>
+        <p>You cannot edit the hash. You can set the gadget to inactive so no new shortcuts can be claimed from it.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Where does the fee go?</h3>
+        <p>Fees stay in the contract. The operator (haxOperator) can withdraw to the treasury address (haxTreasury) via withdrawTreasury.</p>
+      </div>
+    </div>
+
+    <footer>
+      GadgetSplash · HackApp · EVM mainnet · Digital efficiency hacks
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const ABI = [
+        "function registerGadget(bytes32 gadgetHash) payable",
+        "function claimShortcut(uint256 gadgetId)",
+        "function getGadgetIdsByOwner(address owner) view returns (uint256[])",
+        "function efficiencyScore(address) view returns (uint256)",
+        "function shortcutCountByUser(address) view returns (uint256)",
+        "function gadgetCountByOwner(address) view returns (uint256)",
+        "function gadgetNonce() view returns (uint256)",
+        "function totalFeesWei() view returns (uint256)",
+        "function totalShortcutsClaimed() view returns (uint256)",
+        "function haxPaused() view returns (bool)",
+        "function haxGadgets(uint256) view returns (address owner, bytes32 gadgetHash, uint256 registeredAt, bool active)",
+        "event HAX_GadgetRegistered(uint256 indexed gadgetId, address indexed owner, bytes32 gadgetHash)",
+        "event HAX_ShortcutClaimed(uint256 indexed shortcutId, uint256 indexed gadgetId, address indexed claimer, uint256 scoreAdded)"
+      ];
+
+      let provider = null;
+      let signer = null;
+      let contract = null;
+      let contractAddress = "";
+      const activity = [];
+
+      const walletEl = document.getElementById("wallet-addr");
+      const btnConnect = document.getElementById("btn-connect");
+      const contractInput = document.getElementById("contract-address");
+      const btnSetContract = document.getElementById("btn-set-contract");
+      const statGadgets = document.getElementById("stat-gadgets");
+      const statShortcuts = document.getElementById("stat-shortcuts");
+      const statFees = document.getElementById("stat-fees");
+      const statMyScore = document.getElementById("stat-my-score");
+      const gadgetPayload = document.getElementById("gadget-payload");
+      const btnRegister = document.getElementById("btn-register");
+      const registerMsg = document.getElementById("register-msg");
+      const claimGadgetId = document.getElementById("claim-gadget-id");
+      const btnClaim = document.getElementById("btn-claim");
+      const claimMsg = document.getElementById("claim-msg");
+      const myScoreEl = document.getElementById("my-score");
+      const myShortcutsEl = document.getElementById("my-shortcuts");
+      const myGadgetsEl = document.getElementById("my-gadgets");
+      const myGadgetIdsEl = document.getElementById("my-gadget-ids");
+      const activityList = document.getElementById("activity-list");
+
+      function pushActivity(text, type) {
+        activity.unshift({ text, type, ts: new Date().toLocaleTimeString() });
+        if (activity.length > 30) activity.pop();
+        renderActivity();
+      }
+
+      function renderActivity() {
+        activityList.innerHTML = activity.map(a =>
+          `<div class="list-item"><span>${a.text}</span><span class="meta">${a.ts}</span></div>`
+        ).join("");
+      }
+
+      function showMsg(el, text, type) {
+        el.innerHTML = text ? `<div class="msg ${type}">${text}</div>` : "";
+      }
+
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
