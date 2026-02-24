@@ -593,3 +593,83 @@
             contract.gadgetCountByOwner(addr)
           ]);
           statMyScore.textContent = score.toString();
+          myScoreEl.textContent = score.toString();
+          myShortcutsEl.textContent = shortcuts.toString();
+          myGadgetsEl.textContent = count.toString();
+          const ids = await contract.getGadgetIdsByOwner(addr);
+          myGadgetIdsEl.innerHTML = ids.length
+            ? ids.map(id => `<div class="list-item"><span class="id">#${id}</span></div>`).join("")
+            : "<div class="list-item"><span class="meta">No gadgets yet</span></div>";
+        } catch (_) {
+          myScoreEl.textContent = "—";
+          myShortcutsEl.textContent = "—";
+          myGadgetsEl.textContent = "—";
+          myGadgetIdsEl.innerHTML = "";
+        }
+      }
+
+      btnRegister.addEventListener("click", async () => {
+        if (!contract || !signer) {
+          showMsg(registerMsg, "Connect wallet and set contract first.", "err");
+          return;
+        }
+        const payload = (gadgetPayload.value || "").trim();
+        if (!payload) {
+          showMsg(registerMsg, "Enter a payload (e.g. shortcut description).", "err");
+          return;
+        }
+        if (payload.length > 4096) {
+          showMsg(registerMsg, "Payload too long (max 4KB).", "err");
+          return;
+        }
+        const feeWei = ethers.parseEther("0.002");
+        const hash = keccak256Payload(payload);
+        showMsg(registerMsg, "Confirm in wallet…", "info");
+        btnRegister.disabled = true;
+        try {
+          const tx = await contract.registerGadget(hash, { value: feeWei });
+          pushActivity("Register tx sent: " + tx.hash.slice(0, 12) + "…", "info");
+          showMsg(registerMsg, "Tx sent. Waiting for confirmation…", "info");
+          await tx.wait();
+          showMsg(registerMsg, "Gadget registered successfully.", "ok");
+          pushActivity("Gadget registered.", "ok");
+          refreshStats();
+          refreshMyStats();
+        } catch (e) {
+          showMsg(registerMsg, e.message || "Transaction failed.", "err");
+          pushActivity("Register failed: " + (e.message || "error"), "err");
+        }
+        btnRegister.disabled = false;
+      });
+
+      btnClaim.addEventListener("click", async () => {
+        if (!contract || !signer) {
+          showMsg(claimMsg, "Connect wallet and set contract first.", "err");
+          return;
+        }
+        const gid = parseInt(claimGadgetId.value, 10);
+        if (!gid || gid < 1) {
+          showMsg(claimMsg, "Enter a valid gadget ID (≥ 1).", "err");
+          return;
+        }
+        showMsg(claimMsg, "Confirm in wallet…", "info");
+        btnClaim.disabled = true;
+        try {
+          const tx = await contract.claimShortcut(gid);
+          pushActivity("Claim tx sent: " + tx.hash.slice(0, 12) + "…", "info");
+          await tx.wait();
+          showMsg(claimMsg, "Shortcut claimed. Efficiency score increased.", "ok");
+          pushActivity("Shortcut claimed for gadget #" + gid, "ok");
+          refreshStats();
+          refreshMyStats();
+        } catch (e) {
+          showMsg(claimMsg, e.message || "Transaction failed.", "err");
+          pushActivity("Claim failed: " + (e.message || "error"), "err");
+        }
+        btnClaim.disabled = false;
+      });
+    })();
+  </script>
+</body>
+</html>
+
