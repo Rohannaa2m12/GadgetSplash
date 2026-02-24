@@ -253,3 +253,88 @@
       border-radius: 4px;
       background: var(--surface);
       color: var(--muted);
+    }
+    .badge.success { background: rgba(52, 211, 153, 0.15); color: var(--emerald); }
+    .badge.warn { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+    .about-block {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .about-block strong { color: var(--text); }
+    .faq-item {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-item h3 { font-size: 0.9rem; color: var(--cyan); margin-bottom: 0.35rem; }
+    .faq-item p { font-size: 0.82rem; color: var(--muted); }
+    .efficiency-tiers {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .tier-pill {
+      font-size: 0.75rem;
+      padding: 0.4rem;
+      text-align: center;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .tier-pill span { display: block; font-family: var(--font-mono); color: var(--cyan); margin-top: 0.2rem; }
+    .gadget-fee-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .gadget-fee-note kbd { font-family: var(--font-mono); background: var(--panel); padding: 0.1rem 0.3rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">GadgetSplash</span>
+        </div>
+        <p class="tagline">HackApp · Digital efficiency hacks · Register gadgets, claim shortcuts</p>
+      </div>
+      <div class="header-right">
+        <span class="addr" id="wallet-addr">—</span>
+        <button type="button" class="btn" id="btn-connect">Connect wallet</button>
+      </div>
+    </header>
+
+    <div class="contract-row">
+      <input type="text" id="contract-address" placeholder="HackApp contract address (0x…)" />
+      <button type="button" class="btn" id="btn-set-contract">Use contract</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Total gadgets</div>
+        <div class="value" id="stat-gadgets">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total shortcuts</div>
+        <div class="value" id="stat-shortcuts">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total fees</div>
+        <div class="value" id="stat-fees">—</div>
