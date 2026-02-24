@@ -168,3 +168,88 @@
       background: var(--surface);
       color: var(--text);
     }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+    .form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+    .msg {
+      font-size: 0.85rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-top: 0.75rem;
+    }
+    .msg.info { background: rgba(34, 211, 238, 0.1); border: 1px solid var(--cyan-dim); }
+    .msg.err { background: rgba(251, 113, 133, 0.1); border: 1px solid var(--rose); }
+    .msg.ok { background: rgba(52, 211, 153, 0.1); border: 1px solid var(--emerald); }
+
+    .tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    .tab {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { background: var(--panel); color: var(--cyan); border-color: var(--cyan); }
+
+    .panel { display: none; }
+    .panel.visible { display: block; }
+
+    .list-title { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .list-item {
+      font-size: 0.82rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item .id { font-family: var(--font-mono); color: var(--cyan); }
+    .list-item .meta { color: var(--muted); }
+
+    .user-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .user-stats .item {
+      background: var(--surface);
+      padding: 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .user-stats .item .k { color: var(--muted); }
+    .user-stats .item .v { font-family: var(--font-mono); color: var(--emerald); }
+
+    footer {
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--muted);
